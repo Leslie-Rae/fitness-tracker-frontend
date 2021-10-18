@@ -18,19 +18,16 @@ const Myroutines = (props) => {
 
 
     const fetchMyRoutines = async () => {
-
         const response = await fetch(`${baseURL}/users/${username}/routines`, {
             headers: {
                 'Content-Type': 'application/json',
             },
         })
         const myRawRoutines = await response.json();
+        console.log(myRawRoutines[0])
         setMyRoutines(myRawRoutines)
-        // console.log(myRoutines[0].id)
     };
-    // useEffect(() => {
-    //     fetchMyRoutines()
-    // })
+
 
     const handleSubmit = async (e) => {
         // console.log(props.user.token)
@@ -51,7 +48,6 @@ const Myroutines = (props) => {
             }
         );
         const info = await resp.json();
-        console.log(info)
         if (info.error) {
             setErrorMessage("A Routine by that name already exists");
             return;
@@ -61,8 +57,8 @@ const Myroutines = (props) => {
         fetchMyRoutines();
     };
 
-    const handleDelete = async (routineId) => {
 
+    const handleDelete = async (routineId) => {
         const response = await fetch(`${baseURL}/routines/${routineId}`, {
             method: "DELETE",
             headers: {
@@ -72,6 +68,18 @@ const Myroutines = (props) => {
         })
         const info = await response.json();
         fetchMyRoutines();
+    }
+
+    const updateRoutine = async (routineId) => {
+        const response = await fetch(`${baseURL}/routines/${routineId}`, {
+            method: "PATCH",
+            body: JSON.stringify({
+                name: 'Long Cardio Day',
+                goal: 'To get your heart pumping!'
+            })
+        })
+        const info = await response.json()
+        console.log(info)
     }
 
     return (
@@ -99,6 +107,8 @@ const Myroutines = (props) => {
                     <div key={routine.id}>
                         <p>Routine: {routine.name}</p>
                         <p>{routine.goal}</p>
+                        <button onClick={() => updateRoutine()}
+                        >Edit</button>
                         <button onClick={() => handleDelete(routine.id)}
                         >Delete</button>
                     </div>
