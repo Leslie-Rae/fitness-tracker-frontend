@@ -10,7 +10,7 @@ import Navbar from './components/Navbar';
 import Register from './components/Register';
 import Routines from './components/Routines';
 
-export const baseURL = "http://fitnesstrac-kr.herokuapp.com/api";
+export const baseURL = "https://fitnesstrac-kr.herokuapp.com/api";
 
 function App() {
   const [user, setUser] = useState(null)
