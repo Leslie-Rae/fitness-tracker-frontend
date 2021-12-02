@@ -1,12 +1,36 @@
 import { useEffect, useState } from "react";
 import { baseURL } from "../App";
+import { makeStyles } from "@mui/styles";
+import { Box } from "@mui/system";
+import { Button, Card, TextField, Typography } from "@mui/material";
+
+const useStyles = makeStyles({
+    grid: {
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr'
+    },
+    form: {
+        display: "flex",
+        flexDirection: "column",
+        width: '80%',
+        alignItems: 'center',
+        margin: 'auto',
+
+
+    },
+    card: {
+        padding: '1em',
+        margin: '1em'
+    }
+})
 
 const Myroutines = (props) => {
     const [myRoutines, setMyRoutines] = useState([])
     const [name, setName] = useState("")
     const [goal, setGoal] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
-    const username = props.user.username
+    const username = props.user.username;
+    const classes = useStyles();
 
 
     useEffect(() => {
@@ -74,8 +98,8 @@ const Myroutines = (props) => {
         const response = await fetch(`${baseURL}/routines/${routineId}`, {
             method: "PATCH",
             body: JSON.stringify({
-                name: 'Long Cardio Day',
-                goal: 'To get your heart pumping!'
+                name: name,
+                goal: goal
             })
         })
         const info = await response.json()
@@ -84,37 +108,66 @@ const Myroutines = (props) => {
 
     return (
         <div>
-            <>
-                <form onSubmit={handleSubmit}>
-                    <input type="text"
+
+
+            <div className={classes.grid}>
+                <div>
+                    {myRoutines.map(routine => (
+                        <Card key={routine.id} className={classes.card}>
+                            <p>Routine: {routine.name}</p>
+                            <p>{routine.goal}</p>
+                            {/* <Button onClick={() => updateRoutine()}
+                            >Edit</Button> */}
+                            <Button onClick={() => handleDelete(routine.id)}
+                                color="error"
+                            >Delete</Button>
+                        </Card>
+                    ))}
+                </div>
+                <Box
+                    className={classes.form}
+                    component="form"
+                    onSubmit={handleSubmit}
+                    sx={{ mt: 2 }}
+                >
+                    <Typography component="h1" variant="h5">
+                        Create A New Routine
+                    </Typography>
+                    <TextField
+                        margin="normal"
+                        required
+                        fullWidth
                         placeholder="Name"
+                        type="text"
                         value={name}
                         onChange={(e) => {
                             setName(e.target.value)
-                        }}></input>
-                    <input type="text"
+                        }} placeholder="Routine Name"
+                    />
+                    <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        type="text"
                         placeholder="Goal"
                         value={goal}
                         onChange={(e) => {
                             setGoal(e.target.value)
-                        }}></input>
-                    <button>Create New Routine</button>
+                        }}
+                    />
+                    <Button
+                        className={classes.button}
+                        type="submit"
+                        variant="contained"
+                        sx={{ mt: 3, mb: 2, backgroundColor: 'gray' }}
+                    >
+                        Let's Go!
+                    </Button>
                     <p>{errorMessage}</p>
-                </form>
-            </>
-            <div>
-                {myRoutines.map(routine => (
-                    <div key={routine.id}>
-                        <p>Routine: {routine.name}</p>
-                        <p>{routine.goal}</p>
-                        <button onClick={() => updateRoutine()}
-                        >Edit</button>
-                        <button onClick={() => handleDelete(routine.id)}
-                        >Delete</button>
-                    </div>
-                ))}
+                </Box>
             </div>
         </div>
+
 
     )
 }

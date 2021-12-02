@@ -47,7 +47,7 @@ function App() {
   return (
     <div>
       <Navbar setUser={setUser} user={user} />
-      <Route exact path="/"><Home /></Route>
+      <Route exact path="/"><Home user={user} /></Route>
       <Route path="/routines"><Routines /></Route>
       <Route path="/my-routines"><Myroutines user={user} token={token} /></Route>
       <Route path="/activities"><Activities token={token} user={user} /></Route>
